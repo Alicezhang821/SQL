@@ -1,0 +1,36 @@
+```%load_ext sql
+```
+
+# Enter the connection string for your Db2 on Cloud database instance below
+# %sql ibm_db_sa://my-username:my-password@my-hostname:my-port/my-db-name
+     %sql ibm_db_sa://bqk33178:1fzpnlcjvstv9j^q@dashdb-txn-sbox-yp-dal09-03.services.dal.bluemix.net:50000/BLUDB
+# 1.Find the total number of crimes recorded in the CRIME table
+     %sql select count (*) from CHICAGO_CRIME_DATA
+# 2.Retrieve first 10 rows from the CRIME table
+     %sql select * from CHICAGO_CRIME_DATA limit 10;
+# 3.How many crimes involve an arrest?
+     %sql select count (*) from CHICAGO_CRIME_DATA where ARREST = TRUE
+# 4.Which unique types of crimes have been recorded at GAS STATION locations?
+%sql select * from CHICAGO_CRIME_DATA where LOCATION_DESCRIPTION like '%GAS%' 
+
+# 5.
+In the CENUS_DATA table list all Community Areas whose names start with the letter ‘B’.
+%sql select * from CENSUS_DATA where COMMUNITY_AREA_NAME like 'B%' 
+# 6.
+Which schools in Community Areas 10 to 15 are healthy school certified?
+%sql select * from CHICAGO_PUBLIC_SCHOOLS where HEALTHY_SCHOOL_CERTIFIED = 'Yes' and COMMUNITY_AREA_NUMBER between 10 and 15 
+# 7.
+What is the average school Safety Score?
+%sql select AVG(SAFETY_SCORE) from CHICAGO_PUBLIC_SCHOOLS
+# 8.
+List the top 5 Community Areas by average College Enrollment [number of students]
+%sql select COMMUNITY_AREA_NAME,avg(COLLEGE_ENROLLMENT) from CHICAGO_PUBLIC_SCHOOLS\
+group by Community_Area_Name \
+order by avg(COLLEGE_ENROLLMENT) desc limit 5 
+ # 9.
+Use a sub-query to determine which Community Area has the least value for school Safety Score?
+%sql select COMMUNITY_AREA_NAME from CHICAGO_PUBLIC_SCHOOLS where SAFETY_SCORE = (select MIN(SAFETY_SCORE) from CHICAGO_PUBLIC_SCHOOLS)
+ # 10.
+
+%sql select COMMUNITY_AREA_NUMBER, PER_CAPITA_INCOME from CENSUS_DATA\
+where COMMUNITY_AREA_NUMBER =(SELECT COMMUNITY_AREA_NUMBER from CHICAGO_PUBLIC_SCHOOLS where SAFETY_SCORE = 1)
